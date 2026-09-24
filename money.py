@@ -12,10 +12,21 @@ class Money:
         "CHF": 0.82316
     }
 
-    def __init__(self, amount: int, currency: str) -> None:
-        self.name = currency
-        self.amount = amount
+    def __init__(self, amount: float, currency: str) -> None:
+        self.currency = currency
+        self.amount = float(amount)
 
 
     def __str__(self) -> str:
-        return f"{self.amount} {self.name}"
+        return f"{self.amount:.2f} {self.currency}"
+
+    def convert_to(self, other_currency: str) -> "Money":
+        """Convert to another currency by using USD as the base currency."""
+
+        current_rate = self.conversion_rates[self.currency]
+        target_rate = self.conversion_rates[other_currency]
+
+        usd_amount = self.amount / current_rate
+        new_amount = usd_amount * target_rate
+        
+        return Money(new_amount, other_currency)
