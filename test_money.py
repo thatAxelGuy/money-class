@@ -1,23 +1,81 @@
 from money import Money
 
-usd = Money(50, "USD")
 
-#print(usd)
-#print(usd.convert_to("EUR"))
+def test_money_creation():
+    money = Money(50, "USD")
 
-eur = Money(50, "USD").convert_to("EUR")
-usd_c =Money(50, "EUR").convert_to("USD")
-jpy = Money(50, "GBP").convert_to("JPY")
+    assert money.amount == 50
+    assert money.currency == "USD"
 
-print(eur)
-print(usd_c)
-print(jpy)
 
-print(jpy + 50)
+def test_money_string():
+    money = Money(50, "USD")
 
-result = eur + usd_c
-print(result)
+    assert str(money) == "50.00 USD"
 
-print(Money(10, "USD") + 5)
-print(Money(10, "USD") + Money(5, "USD"))
-print(Money(10, "USD") + Money(5, "EUR"))
+
+def test_convert_usd_to_eur():
+    money = Money(50, "USD")
+
+    result = money.convert_to("EUR")
+
+    assert result.currency == "EUR"
+    assert result.amount == 50 * Money.conversion_rates["EUR"]
+
+
+def test_convert_eur_to_usd():
+    money = Money(50, "EUR")
+
+    result = money.convert_to("USD")
+
+    assert result.currency == "USD"
+    assert result.amount == 50 / Money.conversion_rates["EUR"]
+
+
+def test_add_number():
+    money = Money(10, "USD")
+
+    result = money + 5
+
+    assert result.amount == 15
+    assert result.currency == "USD"
+
+
+def test_add_money_same_currency():
+    first = Money(10, "USD")
+    second = Money(5, "USD")
+
+    result = first + second
+
+    assert result.amount == 15
+    assert result.currency == "USD"
+
+
+def test_add_money_different_currency():
+    first = Money(10, "USD")
+    second = Money(5, "EUR")
+
+    result = first + second
+
+    expected = 10 + (5 / Money.conversion_rates["EUR"])
+
+    assert result.amount == expected
+    assert result.currency == "USD"
+
+
+def test_multiply_money():
+    money = Money(10, "USD")
+
+    result = money * 3
+
+    assert result.amount == 30
+    assert result.currency == "USD"
+
+
+def test_operations_return_new_money():
+    money = Money(10, "USD")
+
+    result = money + 5
+
+    assert result is not money
+    assert money.amount == 10

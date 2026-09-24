@@ -41,4 +41,7 @@ class Money:
             return Money(new_amount, self.currency)
         else:
             return Money(self.amount + other, self.currency)
-        
+
+
+    def __mul__(self, other):
+        return Money(self.amount * other, self.currency)
