@@ -1,9 +1,13 @@
+"""Provide money amounts and currency conversion utilities."""
+
 from __future__ import annotations
 
 from typing import ClassVar
 
 
 class Money:
+    """Represent a monetary amount in a specified currency."""
+
     conversion_rates: ClassVar[dict[str, float]] = {
         "USD": 1.0,
         "EUR": 0.87653,
@@ -15,6 +19,7 @@ class Money:
     }
 
     def __init__(self, amount: float, currency: str) -> None:
+        self._validate_currency(currency)
         self.currency = currency
         self.amount = float(amount)
 
@@ -22,9 +27,17 @@ class Money:
     def __str__(self) -> str:
         return f"{self.amount:.2f} {self.currency}"
 
+
+    @classmethod
+    def _validate_currency(cls, currency: str) -> None:
+        if currency not in cls.conversion_rates:
+            raise ValueError("Currency not in valid conversion rates.")
+
+
     def convert_to(self, other_currency: str) -> Money:
         """Convert to another currency by using USD as the base currency."""
-
+        self._validate_currency(other_currency)
+        
         current_rate = self.conversion_rates[self.currency]
         target_rate = self.conversion_rates[other_currency]
 
@@ -43,5 +56,5 @@ class Money:
             return Money(self.amount + other, self.currency)
 
 
-    def __mul__(self, other):
+    def __mul__(self, other) -> Money:
         return Money(self.amount * other, self.currency)

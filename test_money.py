@@ -1,5 +1,6 @@
-from money import Money
+import pytest
 
+from money import Money
 
 def test_money_creation():
     money = Money(50, "USD")
@@ -79,3 +80,19 @@ def test_operations_return_new_money():
 
     assert result is not money
     assert money.amount == 10
+
+def test_invalid_currency():
+    with pytest.raises(ValueError):
+        Money(50, "XYZ")
+
+    with pytest.raises(ValueError):
+        Money(50, "USD").convert_to("XYZ")
+
+def test_convert_to_same_currency():
+    money = Money(50, "USD")
+
+    result = money.convert_to("USD")
+
+    assert result.amount == 50
+    assert result.currency == "USD"
+
