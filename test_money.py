@@ -1,5 +1,5 @@
+"""Provide Test cases for pytest"""
 import pytest
-
 from money import Money
 
 def test_money_creation():

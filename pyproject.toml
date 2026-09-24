@@ -1,3 +1,2 @@
 [tool.ruff.lint]
 select = ["E", "F", "D100", "D101", "D102", "D103"]
-"test_*.py" = ["D100", "D103"]
